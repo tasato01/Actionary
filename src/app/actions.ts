@@ -32,14 +32,16 @@ export type DictionaryResult = {
   examples: string[];
 };
 
-export async function searchDictionary(query: string): Promise<DictionaryResult | null> {
+export type SearchResponse =
+  | { success: true; data: DictionaryResult }
+  | { success: false; error: string };
+
+export async function searchDictionary(query: string): Promise<SearchResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
     console.error('API Key is missing.');
-    // Return null instead of throwing to prevent 500 error on client
-    // client can check for null result with specific error state
-    throw new Error('Server configuration error: API Key missing');
+    return { success: false, error: 'Server configuration error: GEMINI_API_KEY is missing.' };
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
@@ -109,15 +111,15 @@ export async function searchDictionary(query: string): Promise<DictionaryResult 
     }
   `;
 
-  let lastError = null;
+  let lastError: any = null;
 
   for (const modelName of candidateModels) {
     try {
       const model = genAI.getGenerativeModel({ model: modelName });
 
-      // Add a timeout to prevent hanging indefinitely
+      // Add a timeout to prevent hanging indefinitely (Keep it within maxDuration)
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timed out')), 15000)
+        setTimeout(() => reject(new Error('Request timed out')), 25000)
       );
 
       const resultPromise = model.generateContent(prompt);
@@ -138,7 +140,7 @@ export async function searchDictionary(query: string): Promise<DictionaryResult 
         throw new Error("Invalid response structure from model");
       }
 
-      return data;
+      return { success: true, data };
     } catch (error: any) {
       console.warn(`Model ${modelName} failed:`, error.message);
       lastError = error;
@@ -147,7 +149,8 @@ export async function searchDictionary(query: string): Promise<DictionaryResult 
   }
 
   console.error("All models failed. Last error:", lastError);
-  // Rethrowing specifically so the client can catch it. 
-  // In Next.js Server Actions, throwing an Error is the standard way to signal failure.
-  throw new Error("Failed to retrieve dictionary data. Please try again.");
+  return {
+    success: false,
+    error: `Failed to retrieve dictionary data. Last error: ${lastError?.message || 'Unknown error'}`
+  };
 }

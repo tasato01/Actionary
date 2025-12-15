@@ -5,6 +5,9 @@ import { Search, BookOpen, Clock, Globe, Info, Sparkles, Volume2, AlertCircle, X
 import { searchDictionary, type DictionaryResult } from './actions';
 import styles from './page.module.css';
 
+// Allow longer timeout for AI generation (Vercel specific const)
+export const maxDuration = 60;
+
 export default function Home() {
   const [query, setQuery] = useState('');
   const [result, setResult] = useState<DictionaryResult | null>(null);
@@ -45,10 +48,18 @@ export default function Home() {
 
     startTransition(async () => {
       try {
-        const data = await searchDictionary(cleanTerm);
-        setResult(data);
+        const response = await searchDictionary(cleanTerm);
+        if (response.success) {
+          setResult(response.data);
+          setError('');
+        } else {
+          setResult(null);
+          // Show the actual error message from the server
+          setError(response.error);
+        }
       } catch (err: any) {
         console.error(err);
+        // Fallback for network errors (e.g. offline)
         setError(err.message || 'Failed to retrieve information. Please try again.');
       }
     });
