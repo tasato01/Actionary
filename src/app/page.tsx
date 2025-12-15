@@ -123,6 +123,7 @@ export default function Home() {
             <input
               ref={inputRef}
               type="text"
+              enterKeyHint="search"
               placeholder="Search for a word or idiom..."
               className={styles.searchInput}
               value={query}
@@ -141,13 +142,7 @@ export default function Home() {
               </button>
             )}
 
-            <button
-              type="submit"
-              disabled={isPending}
-              className={styles.searchButton}
-            >
-              Search
-            </button>
+
           </div>
         </div>
       </form>

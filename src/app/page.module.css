@@ -138,26 +138,6 @@
 
 /* ... (skip unchanged) ... */
 
-.searchButton {
-  background-color: #334155;
-  color: #e2e8f0;
-  border: 1px solid #475569;
-  border-radius: 12px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.searchButton:hover {
-  background-color: #475569;
-  color: #fff;
-  border-color: #64748b;
-  transform: translateY(-1px);
-}
-
-/* ... (skip unchanged) ... */
-
 .partOfSpeechHeader {
   font-size: 0.85rem;
   font-weight: 700;
