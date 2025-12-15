@@ -92,8 +92,10 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
       
       // Cognates / Root Words (MANDATORY - Provide at least 3 if possible)
       // Words that share the same etymological root.
+      // IMPORTANT: In "breakdown", surround the shared root part with asterisks (*) to highlight it.
       "rootWords": [
-        {"term": "cognate 1", "breakdown": "pre/*dict*", "meaning": "brief meaning in Japanese"}
+        {"term": "prediction", "breakdown": "pre/*dict*/*ion*", "meaning": "prediction"},
+        {"term": "contradict", "breakdown": "contra/*dict*", "meaning": "deny the truth"}
       ],
       "examples": ["English example / Japanese translation"]
     }
