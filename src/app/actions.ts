@@ -49,8 +49,8 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
   // List of models to try in order of preference
   const candidateModels = [
     'gemini-2.5-flash',
-    'gemini-1.5-flash',
-    'gemini-1.5-pro',
+    'gemini-2.5-flash-lite',
+    'gemini-2.0-flash',
   ];
 
   const prompt = `
@@ -111,7 +111,7 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
     }
   `;
 
-  let lastError: any = null;
+  let checkError: any = null;
 
   for (const modelName of candidateModels) {
     try {
@@ -143,14 +143,16 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
       return { success: true, data };
     } catch (error: any) {
       console.warn(`Model ${modelName} failed:`, error.message);
-      lastError = error;
-      // Continue to next model
+      // Capture the first error as it's likely the most relevant (from the preferred model)
+      if (!checkError) {
+        checkError = error;
+      }
     }
   }
 
-  console.error("All models failed. Last error:", lastError);
+  console.error("All models failed. Primary error:", checkError);
   return {
     success: false,
-    error: `Failed to retrieve dictionary data. Last error: ${lastError?.message || 'Unknown error'}`
+    error: `Failed to retrieve dictionary data. Last error: ${checkError?.message || 'Unknown error'}`
   };
 }
