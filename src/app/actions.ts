@@ -2,15 +2,31 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+export type MeaningGroup = {
+  partOfSpeech: string; // e.g., "noun", "verb", "adjective", "idiom"
+  definitions: string[];
+};
+
+export type Morpheme = {
+  part: string;
+  meaning: string;
+};
+
+export type RootWord = {
+  term: string;
+  breakdown: string;
+  meaning: string;
+};
+
 export type DictionaryResult = {
   type: 'word' | 'idiom';
   term: string;
   correctedFrom?: string; // If the original query was misspelled
-  meaning: string[];
+  meaning: MeaningGroup[];
   pronunciation?: string;
   etymology?: string; // Text description
-  morphemes?: { part: string; meaning: string }[]; // Structured breakdown e.g. [{part: "in-", meaning: "not"}, ...]
-  rootWords?: { term: string; breakdown: string; meaning: string }[]; // Words sharing the same root with meanings
+  morphemes?: Morpheme[]; // Structured breakdown e.g. [{part: "in-", meaning: "not"}, ...]
+  rootWords?: RootWord[]; // Words sharing the same root with meanings
   relatedWords?: string[]; // General synonyms/related
   origin?: string;        // For idioms
   examples: string[];
@@ -20,16 +36,18 @@ export async function searchDictionary(query: string): Promise<DictionaryResult 
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
-    throw new Error('API Key is missing. Please set GEMINI_API_KEY in .env.local');
+    console.error('API Key is missing.');
+    // Return null instead of throwing to prevent 500 error on client
+    // client can check for null result with specific error state
+    throw new Error('Server configuration error: API Key missing');
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
 
   // List of models to try in order of preference
   const candidateModels = [
-    'gemini-2.5-flash',
+    'gemini-2.0-flash-exp', // Try the experimental 2.0 flash model first for speed/quality
     'gemini-1.5-flash',
-    'gemini-2.0-flash-exp',
     'gemini-pro',
   ];
 
@@ -41,31 +59,37 @@ export async function searchDictionary(query: string): Promise<DictionaryResult 
     
     2. Determine if it is a "word" or an "idiom".
     
-    3. Return ONLY a valid JSON object with the structure below.
+    3. Return ONLY a valid JSON object with the structure below. Do not include markdown formatting like \`\`\`json.
     
-    IMPORTANT: When providing Japanese translations or meanings, DO NOT include Romaji or phonetic readings (e.g., write "割増金", NOT "割増金 (warimashikin)").
+    IMPORTANT: When providing Japanese translations or meanings, DO NOT include Romaji or phonetic readings.
     
     If it is a **word**:
     {
       "type": "word",
       "term": "Corrected Word (or original if correct)",
       "correctedFrom": "Original Misspelled Input (or null if correct)",
-      "meaning": ["Japanese meaning 1", "Japanese meaning 2"],
+      "meaning": [
+        {
+          "partOfSpeech": "noun", 
+          "definitions": ["Japanese meaning 1", "Japanese meaning 2"]
+        },
+        {
+          "partOfSpeech": "verb", 
+          "definitions": ["Japanese meaning 1"]
+        }
+      ],
       "pronunciation": "IPA",
       
       // Etymology Breakdown
       "etymology": "Full etymology explanation in Japanese",
       "morphemes": [
-        {"part": "morpheme text (e.g. com-)", "meaning": "meaning of this part in Japanese (e.g. 共に)"}
+        {"part": "morpheme text (e.g. com-)", "meaning": "meaning of this part in Japanese"}
       ],
       
       // Cognates (Words sharing the same root/stem)
-      // breakdown: separate parts with '/' and wrap the MAIN shared root in '*'
       "rootWords": [
-        {"term": "cognate 1", "breakdown": "pre/*dict*", "meaning": "brief meaning in Japanese"},
-        {"term": "cognate 2", "breakdown": "dict/*ation*", "meaning": "brief meaning in Japanese"}
+        {"term": "cognate 1", "breakdown": "pre/*dict*", "meaning": "brief meaning in Japanese"}
       ],
-      
       "examples": ["English example / Japanese translation"]
     }
 
@@ -74,7 +98,12 @@ export async function searchDictionary(query: string): Promise<DictionaryResult 
       "type": "idiom",
       "term": "Corrected Idiom",
       "correctedFrom": "Original Misspelled Input (or null if correct)",
-      "meaning": ["Japanese meaning 1", "Japanese meaning 2"],
+      "meaning": [
+        {
+          "partOfSpeech": "phrase",
+          "definitions": ["Japanese meaning 1"]
+        }
+      ],
       "origin": "Origin/Derivation of the expression in Japanese",
       "examples": ["English example / Japanese translation"]
     }
@@ -98,10 +127,18 @@ export async function searchDictionary(query: string): Promise<DictionaryResult 
       const response = await result.response;
       let text = response.text();
 
-      // Cleanup json markdown if present
+      // Cleanup json markdown if present (double check)
       text = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
-      return JSON.parse(text) as DictionaryResult;
+      // Attempt parsing
+      const data = JSON.parse(text) as DictionaryResult;
+
+      // Basic validation of structure
+      if (!data.term || !Array.isArray(data.meaning)) {
+        throw new Error("Invalid response structure from model");
+      }
+
+      return data;
     } catch (error: any) {
       console.warn(`Model ${modelName} failed:`, error.message);
       lastError = error;
@@ -110,5 +147,7 @@ export async function searchDictionary(query: string): Promise<DictionaryResult 
   }
 
   console.error("All models failed. Last error:", lastError);
-  throw new Error("Failed to retrieve dictionary data from any available model.");
+  // Rethrowing specifically so the client can catch it. 
+  // In Next.js Server Actions, throwing an Error is the standard way to signal failure.
+  throw new Error("Failed to retrieve dictionary data. Please try again.");
 }

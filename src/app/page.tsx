@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { Search, BookOpen, Clock, Globe, Mic, Info, Sparkles, Volume2, AlertCircle } from 'lucide-react';
+import { useState, useTransition, useRef, useEffect } from 'react';
+import { Search, BookOpen, Clock, Globe, Info, Sparkles, Volume2, AlertCircle, X, ChevronDown, ChevronRight } from 'lucide-react';
 import { searchDictionary, type DictionaryResult } from './actions';
 import styles from './page.module.css';
 
@@ -11,33 +11,45 @@ export default function Home() {
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
 
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-scroll to results when they appear
+  useEffect(() => {
+    if (result && resultsRef.current) {
+      // Small timeout to ensure DOM is ready and layout is stable
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [result]);
+
   const executeSearch = (term: string) => {
     // Basic cleanup
     const cleanTerm = term.trim();
     if (!cleanTerm) return;
 
     // Check for non-English input (simple check for non-ASCII)
-    // Allows standard punctuation and spaces.
-    // If Japanese/Other detected, stop.
-    // Regex matches any character NOT in standard ASCII range.
     if (/[^\x20-\x7E]/.test(cleanTerm)) {
       setError('Please enter English text only.');
       setResult(null);
       return;
     }
 
-    // Update input to reflect what's being searched (if user clicked a root word)
+    // Update input to reflect what's being searched
     setQuery(cleanTerm);
     setError('');
+    // Don't clear result immediately to prevent flashing empty state if it's a quick reload, 
+    // but here we want to clear it to indicate new search starts visually.
     setResult(null);
 
     startTransition(async () => {
       try {
         const data = await searchDictionary(cleanTerm);
         setResult(data);
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
-        setError('Failed to retrieve information. Please check your API key or try again.');
+        setError(err.message || 'Failed to retrieve information. Please try again.');
       }
     });
   };
@@ -45,6 +57,13 @@ export default function Home() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     executeSearch(query);
+  };
+
+  const handleClear = () => {
+    setQuery('');
+    setResult(null);
+    setError('');
+    inputRef.current?.focus();
   };
 
   const playAudio = (text: string) => {
@@ -71,12 +90,26 @@ export default function Home() {
           <div className={styles.inputWrapper}>
             <Search className={styles.searchIcon} />
             <input
+              ref={inputRef}
               type="text"
               placeholder="Search for a word or idiom..."
               className={styles.searchInput}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
+
+            {/* Reset/Clear Button */}
+            {query && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className={styles.clearButton}
+                aria-label="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+
             <button
               type="submit"
               disabled={isPending}
@@ -91,6 +124,7 @@ export default function Home() {
       {/* Error Message */}
       {error && !isPending && (
         <div className={styles.errorMessage}>
+          <AlertCircle className="w-5 h-5 inline-block mr-2" />
           {error}
         </div>
       )}
@@ -105,7 +139,7 @@ export default function Home() {
 
       {/* Results Display */}
       {result && !isPending && (
-        <div className={styles.resultsWrapper}>
+        <div ref={resultsRef} className={styles.resultsWrapper}>
 
           {/* Correction Notice */}
           {result.correctedFrom && (
@@ -148,49 +182,65 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Meanings */}
-            <div className={styles.meanings}>
-              {result.meaning.map((m, i) => (
-                <div key={i} className={styles.meaningItem}>
-                  <div className={styles.bullet} />
-                  <p className={styles.meaningText}>{m}</p>
+            {/* Meanings Grouped by Part of Speech */}
+            <div className={styles.meaningsContainer}>
+              {result.meaning.map((group, index) => (
+                <div key={index} className={styles.meaningGroup}>
+                  <div className={styles.partOfSpeechHeader}>
+                    {group.partOfSpeech}
+                  </div>
+                  <div className={styles.meaningsList}>
+                    {group.definitions.map((def, i) => (
+                      <div key={i} className={styles.meaningItem}>
+                        <div className={styles.bullet} />
+                        <p className={styles.meaningText}>{def}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Etymology / Origin */}
+            {/* Etymology / Origin (Collapsible) */}
             {(result.etymology || result.origin || (result.morphemes && result.morphemes.length > 0)) && (
               <div className={styles.sectionSeparator}>
-                <div className={styles.sectionHeader}>
-                  <HistoryIcon type={result.type} />
-                  <h3 className={styles.sectionTitle}>
-                    {result.type === 'word' ? 'Etymology' : 'Origin'}
-                  </h3>
-                </div>
+                <details className={styles.detailsSection} open={false}>
+                  <summary className={styles.summaryHeader}>
+                    <div className="flex items-center gap-2">
+                      <HistoryIcon type={result.type} />
+                      <h3 className={styles.sectionTitle}>
+                        {result.type === 'word' ? 'Etymology' : 'Origin'}
+                      </h3>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 ${styles.summaryIcon}`} />
+                  </summary>
 
-                {/* Morpheme Breakdown (Vertical List Style) */}
-                {result.morphemes && result.morphemes.length > 0 && (
-                  <div className={styles.morphemeList}>
-                    {result.morphemes.map((m, i) => (
-                      <div key={i} className={styles.morphemeRow}>
-                        <span className={styles.morphemePart}>{m.part}</span>
-                        <span className={styles.morphemeMeaning}>{m.meaning}</span>
+                  <div className={styles.detailsContent}>
+                    {/* Morpheme Breakdown */}
+                    {result.morphemes && result.morphemes.length > 0 && (
+                      <div className={styles.morphemeList}>
+                        {result.morphemes.map((m, i) => (
+                          <div key={i} className={styles.morphemeRow}>
+                            <span className={styles.morphemePart}>{m.part}</span>
+                            <span className={styles.morphemeMeaning}>{m.meaning}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    )}
 
-                {/* Text Explanation */}
-                <p className={styles.infoText}>
-                  {result.type === 'word' ? result.etymology : result.origin}
-                </p>
+                    {/* Text Explanation */}
+                    <p className={styles.infoText}>
+                      {result.type === 'word' ? result.etymology : result.origin}
+                    </p>
+                  </div>
+                </details>
               </div>
             )}
 
             {/* Examples */}
             {result.examples && result.examples.length > 0 && (
               <div className={styles.sectionSeparator}>
-                <div className={styles.sectionHeader}>
+                <div className={styles.sectionHeaderUncollapsible}>
                   <BookOpen className="w-4 h-4" />
                   <h3 className={styles.sectionTitle}>Examples</h3>
                 </div>
@@ -204,10 +254,10 @@ export default function Home() {
               </div>
             )}
 
-            {/* Root Words / Cognates (Clickable Vertical List Buttons) */}
+            {/* Root Words / Cognates */}
             {result.type === 'word' && result.rootWords && result.rootWords.length > 0 && (
               <div className={styles.relatedSection}>
-                <div className={styles.sectionHeader}>
+                <div className={styles.sectionHeaderUncollapsible}>
                   <Globe className="w-4 h-4" />
                   <h3 className={styles.sectionTitle}>Words with Same Root</h3>
                 </div>
@@ -227,8 +277,6 @@ export default function Home() {
                       <span className={styles.rootWordBreakdown}>
                         {w.breakdown ? (
                           w.breakdown.split('*').map((part, index) => {
-                            // Even indices are normal, odd indices are highlighted (assuming *root* format)
-                            // e.g. "pre/" (0) "dict" (1) "" (2) -> index 1 is root
                             return index % 2 === 1 ? (
                               <span key={index} className={styles.highlightRoot}>{part}</span>
                             ) : (
@@ -236,7 +284,6 @@ export default function Home() {
                             );
                           })
                         ) : (
-                          // Fallback
                           <span className="opacity-50">-</span>
                         )}
                       </span>
@@ -251,7 +298,7 @@ export default function Home() {
             {/* Fallback to relatedWords if rootWords empty */}
             {result.type === 'word' && (!result.rootWords || result.rootWords.length === 0) && result.relatedWords && (
               <div className={styles.relatedSection}>
-                <div className={styles.sectionHeader}>
+                <div className={styles.sectionHeaderUncollapsible}>
                   <Globe className="w-4 h-4" />
                   <h3 className={styles.sectionTitle}>Related Words</h3>
                 </div>
@@ -264,6 +311,12 @@ export default function Home() {
                 </div>
               </div>
             )}
+
+            {/* AI Disclaimer */}
+            <div className={styles.disclaimer}>
+              <Sparkles className="w-3 h-3 inline-block mr-1" />
+              AI-generated content. Accuracy may vary.
+            </div>
 
           </div>
         </div>

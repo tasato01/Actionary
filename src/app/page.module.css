@@ -48,7 +48,42 @@
   animation-delay: 0.1s;
 }
 
+.meaningsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.meaningGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.partOfSpeechHeader {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a78bfa;
+  /* Light purple */
+  background: rgba(167, 139, 250, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  align-self: flex-start;
+  margin-bottom: 0.25rem;
+}
+
+.meaningsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .searchGroup {
+  width: 100%;
+  max-width: 600px;
   position: relative;
 }
 
@@ -70,53 +105,82 @@
   position: relative;
   display: flex;
   align-items: center;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 9999px;
+  background: rgba(30, 41, 59, 0.8);
+  /* Dark slate */
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
   padding: 0.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.inputWrapper:focus-within {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+  transform: translateY(-1px);
 }
 
 .searchIcon {
-  margin-left: 1rem;
-  color: #6b7280;
   width: 1.25rem;
   height: 1.25rem;
+  color: #94a3b8;
+  margin-left: 0.75rem;
 }
 
 .searchInput {
-  width: 100%;
+  flex: 1;
   background: transparent;
-  color: white;
-  padding: 0.75rem 1rem;
   border: none;
-  font-size: 1.125rem;
+  color: #f8fafc;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
   outline: none;
+  min-width: 0;
 }
 
 .searchInput::placeholder {
-  color: #4b5563;
+  color: #64748b;
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
 
 .searchButton {
-  background-color: #27272a;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
   color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: 500;
   border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .searchButton:hover {
-  background-color: #3f3f46;
+  opacity: 0.9;
+  transform: scale(1.02);
 }
 
 .searchButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  opacity: 0.7;
+  cursor: wait;
 }
 
 /* Suggestion / Correction */
@@ -281,65 +345,149 @@
 }
 
 /* Sections Common Styles */
+
 .sectionSeparator {
   margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #2a2a2a;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.sectionHeader {
+/* Collapsible Details Styles */
+.detailsSection {
+  width: 100%;
+}
+
+/* Remove default marker */
+.detailsSection>summary {
+  list-style: none;
+}
+
+.detailsSection>summary::-webkit-details-marker {
+  display: none;
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.5rem;
+  margin: -0.5rem;
+  /* Negative margin to increase click area */
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.summaryHeader:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.summaryIcon {
+  transition: transform 0.3s ease;
+  color: #94a3b8;
+}
+
+.detailsSection[open] .summaryIcon {
+  transform: rotate(180deg);
+}
+
+.detailsContent {
+  margin-top: 1rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sectionHeader,
+.sectionHeaderUncollapsible {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
-  color: #9ca3af;
+  margin-bottom: 1rem;
+  color: #e2e8f0;
+}
+
+.sectionHeaderUncollapsible {
+  /* Same as old sectionHeader but strictly for non-collapsibles if needed distinct styling */
+  pointer-events: none;
 }
 
 .sectionTitle {
+  font-size: 1.1rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  color: #f1f5f9;
 }
 
-.infoText {
-  color: #d1d5db;
-  line-height: 1.6;
-  font-style: italic;
-  margin-top: 1rem;
-}
-
-/* Morpheme List */
+/* Morphemes */
 .morphemeList {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  background-color: #121212;
-  border-radius: 0.5rem;
-  padding: 0.5rem 0;
 }
 
 .morphemeRow {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1rem;
-  padding: 0.25rem 0.5rem;
-  border-left: 2px solid #555;
-  margin-left: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
 }
 
 .morphemePart {
   font-family: monospace;
-  font-weight: 700;
   font-size: 1.1rem;
-  color: #60a5fa;
-  min-width: 80px;
+  color: #c4b5fd;
+  /* Soft purple */
+  min-width: 60px;
 }
 
 .morphemeMeaning {
-  font-size: 1rem;
-  color: #d1d5db;
+  color: #94a3b8;
+}
+
+.infoText {
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.meanings {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.meaningItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.meaningText {
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.bullet {
+  width: 6px;
+  height: 6px;
+  background-color: #8b5cf6;
+  border-radius: 50%;
+  margin-top: 0.6rem;
+  flex-shrink: 0;
 }
 
 /* Examples */
@@ -349,63 +497,40 @@
 }
 
 .exampleItem {
-  background: linear-gradient(to right, #1a1a1a, transparent);
-  border-left: 2px solid #3b82f6;
-  padding: 1rem 1.5rem;
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #8b5cf6;
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
 }
 
 .exampleText {
-  color: #d1d5db;
+  font-style: italic;
+  color: #cbd5e1;
 }
 
-/* Root Words List (Vertical Button Style) */
-.relatedSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #2a2a2a;
-}
-
+/* Related Words */
 .rootWordsList {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .rootWordRow {
   display: grid;
-  grid-template-columns: 140px 1fr 1fr;
-  /* Fixed Term, Flex Breakdown, Flex Meaning */
+  grid-template-columns: 1fr 1fr 1.5fr;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1rem 1.25rem;
-  border-radius: 0.75rem;
-  background-color: #18181b;
-  border: 1px solid #333;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-@media (max-width: 640px) {
-  .rootWordRow {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
+  transition: all 0.2s ease;
+  gap: 1rem;
 }
 
 .rootWordRow:hover {
-  background-color: #222;
-  border-color: #60a5fa;
+  background: rgba(255, 255, 255, 0.08);
+  /* slightly stronger hover */
   transform: translateX(4px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.rootWordRow:active {
-  transform: translateX(2px);
-  background-color: #27272a;
 }
 
 .rootWordTerm {
