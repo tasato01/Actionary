@@ -262,22 +262,7 @@ export default function Home() {
               </div>
             )}
 
-            {/* Examples */}
-            {result.examples && result.examples.length > 0 && (
-              <div className={styles.sectionSeparator}>
-                <div className={styles.sectionHeaderUncollapsible}>
-                  <BookOpen className="w-4 h-4" />
-                  <h3 className={styles.sectionTitle}>Examples</h3>
-                </div>
-                <div className={styles.exampleGrid}>
-                  {result.examples.map((ex, i) => (
-                    <div key={i} className={styles.exampleItem}>
-                      <p className={styles.exampleText}>{ex}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+
 
             {/* Root Words / Cognates */}
             {result.type === 'word' && result.rootWords && result.rootWords.length > 0 && (
@@ -332,6 +317,23 @@ export default function Home() {
                     <span key={i} className={styles.tag}>
                       {w}
                     </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Examples */}
+            {result.examples && result.examples.length > 0 && (
+              <div className={styles.sectionSeparator}>
+                <div className={styles.sectionHeaderUncollapsible}>
+                  <BookOpen className="w-4 h-4" />
+                  <h3 className={styles.sectionTitle}>Examples</h3>
+                </div>
+                <div className={styles.exampleGrid}>
+                  {result.examples.map((ex, i) => (
+                    <div key={i} className={styles.exampleItem}>
+                      <p className={styles.exampleText}>{ex}</p>
+                    </div>
                   ))}
                 </div>
               </div>
