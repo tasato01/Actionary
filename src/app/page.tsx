@@ -20,10 +20,16 @@ export default function Home() {
   // Auto-scroll to results when they appear
   useEffect(() => {
     if (result && resultsRef.current) {
-      // Small timeout to ensure DOM is ready and layout is stable
+      // Use a slightly longer timeout to allow for full rendering and layout shift
       setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 500);
+        if (resultsRef.current) {
+          const yOffset = -20; // Small offset if needed, or 0 to be exact top
+          const element = resultsRef.current;
+          const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 600);
     }
   }, [result]);
 
