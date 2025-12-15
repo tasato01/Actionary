@@ -114,38 +114,51 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
   let checkError: any = null;
 
   for (const modelName of candidateModels) {
-    try {
-      const model = genAI.getGenerativeModel({ model: modelName });
+    // Retry logic for 503 Service Unavailable
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
 
-      // Add a timeout to prevent hanging indefinitely (Keep it within maxDuration)
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timed out')), 25000)
-      );
+        // Add a timeout to prevent hanging indefinitely (Keep it within maxDuration)
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Request timed out')), 25000)
+        );
 
-      const resultPromise = model.generateContent(prompt);
+        const resultPromise = model.generateContent(prompt);
 
-      // Race the request against the timeout
-      const result = await Promise.race([resultPromise, timeoutPromise]) as any;
-      const response = await result.response;
-      let text = response.text();
+        // Race the request against the timeout
+        const result = await Promise.race([resultPromise, timeoutPromise]) as any;
+        const response = await result.response;
+        let text = response.text();
 
-      // Cleanup json markdown if present (double check)
-      text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        // Cleanup json markdown if present (double check)
+        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
-      // Attempt parsing
-      const data = JSON.parse(text) as DictionaryResult;
+        // Attempt parsing
+        const data = JSON.parse(text) as DictionaryResult;
 
-      // Basic validation of structure
-      if (!data.term || !Array.isArray(data.meaning)) {
-        throw new Error("Invalid response structure from model");
-      }
+        // Basic validation of structure
+        if (!data.term || !Array.isArray(data.meaning)) {
+          throw new Error("Invalid response structure from model");
+        }
 
-      return { success: true, data };
-    } catch (error: any) {
-      console.warn(`Model ${modelName} failed:`, error.message);
-      // Capture the first error as it's likely the most relevant (from the preferred model)
-      if (!checkError) {
-        checkError = error;
+        return { success: true, data };
+      } catch (error: any) {
+        console.warn(`Model ${modelName} attempt ${attempt + 1} failed:`, error.message);
+
+        // Capture the first error as it's likely the most relevant
+        if (!checkError && error.message.includes('503')) {
+          checkError = error; // Prioritize 503 for feedback if everything fails
+        } else if (!checkError) {
+          checkError = error;
+        }
+
+        // Only retry if it's a 503 error or request timeout
+        const isTransient = error.message.includes('503') || error.message.includes('timed out');
+        if (!isTransient) break; // Don't retry other errors, move to next model or fail
+
+        // Wait a small delay before retry
+        if (attempt === 0) await new Promise(res => setTimeout(res, 1000));
       }
     }
   }
