@@ -281,7 +281,7 @@ export default function Home() {
 
             {/* Root Words / Cognates */}
             {result.type === 'word' && result.rootWords && result.rootWords.length > 0 && (
-              <div className={styles.relatedSection}>
+              <div className={styles.sectionSeparator}>
                 <div className={styles.sectionHeaderUncollapsible}>
                   <Globe className="w-4 h-4" />
                   <h3 className={styles.sectionTitle}>Words with Same Root</h3>
@@ -322,7 +322,7 @@ export default function Home() {
 
             {/* Fallback to relatedWords if rootWords empty */}
             {result.type === 'word' && (!result.rootWords || result.rootWords.length === 0) && result.relatedWords && (
-              <div className={styles.relatedSection}>
+              <div className={styles.sectionSeparator}>
                 <div className={styles.sectionHeaderUncollapsible}>
                   <Globe className="w-4 h-4" />
                   <h3 className={styles.sectionTitle}>Related Words</h3>
