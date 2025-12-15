@@ -82,10 +82,12 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
       ],
       "pronunciation": "IPA",
       
+      
       // Etymology Breakdown (MANDATORY)
       "etymology": "Full etymology explanation in Japanese",
       "morphemes": [
-        {"part": "prefix/root/suffix", "meaning": "meaning in Japanese"}
+        {"part": "com-", "meaning": "ともに、完全に (together, completely)"},
+        {"part": "prehend", "meaning": "つかむ、捕らえる (seize, grasp)"}
       ],
       
       // Cognates / Root Words (MANDATORY - Provide at least 3 if possible)
