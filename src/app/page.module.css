@@ -127,10 +127,21 @@
   color: #fff;
 }
 
+/* Card Header */
+.cardHeader {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ... (skip unchanged) ... */
+
 .searchButton {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  color: white;
-  border: none;
+  background-color: #334155;
+  color: #e2e8f0;
+  border: 1px solid #475569;
   border-radius: 12px;
   padding: 0.75rem 1.5rem;
   font-weight: 600;
@@ -139,8 +150,63 @@
 }
 
 .searchButton:hover {
-  opacity: 0.9;
-  transform: scale(1.02);
+  background-color: #475569;
+  color: #fff;
+  border-color: #64748b;
+  transform: translateY(-1px);
+}
+
+/* ... (skip unchanged) ... */
+
+.partOfSpeechHeader {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  align-self: flex-start;
+  margin-bottom: 0.25rem;
+  border: 1px solid transparent;
+  /* Prepare for colored borders */
+}
+
+/* POS Colors */
+.posNoun {
+  color: #fca5a5;
+  /* Red-300 */
+  background: rgba(127, 29, 29, 0.3);
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+.posVerb {
+  color: #93c5fd;
+  /* Blue-300 */
+  background: rgba(30, 58, 138, 0.3);
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+.posAdjective {
+  color: #fde047;
+  /* Yellow-300 */
+  background: rgba(113, 63, 18, 0.3);
+  border-color: rgba(250, 204, 21, 0.3);
+}
+
+.posAdverb {
+  color: #86efac;
+  /* Green-300 */
+  background: rgba(20, 83, 45, 0.3);
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.posPreposition,
+.posConjunction,
+.posDefault {
+  color: #c4b5fd;
+  /* Violet-300 */
+  background: rgba(91, 33, 182, 0.3);
+  border-color: rgba(167, 139, 250, 0.3);
 }
 
 .searchButton:disabled {
@@ -228,11 +294,24 @@
 }
 
 .cardHeader {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+/* ... (skip unchanged) ... */
+
+.partOfSpeechHeader {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  align-self: flex-start;
+  margin-bottom: 0.25rem;
 }
 
 .term {
@@ -301,8 +380,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #a78bfa;
-  background: rgba(167, 139, 250, 0.1);
+  /* Colors handled by specific classes now */
   padding: 0.25rem 0.75rem;
   border-radius: 99px;
   align-self: flex-start;

@@ -73,6 +73,9 @@ export default function Home() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    if (inputRef.current) {
+      inputRef.current.blur(); // Close keyboard on mobile
+    }
     executeSearch(query);
   };
 
@@ -81,6 +84,17 @@ export default function Home() {
     setResult(null);
     setError('');
     inputRef.current?.focus();
+  };
+
+  // Helper to get color class based on POS
+  const getPosClass = (pos: string) => {
+    const p = pos.toLowerCase();
+    if (p.includes('noun')) return styles.posNoun;
+    if (p.includes('verb')) return styles.posVerb;
+    if (p.includes('adj')) return styles.posAdjective;
+    if (p.includes('adv')) return styles.posAdverb;
+    if (p.includes('prep') || p.includes('conj')) return styles.posPreposition;
+    return styles.posDefault;
   };
 
   const playAudio = (text: string) => {
@@ -203,7 +217,7 @@ export default function Home() {
             <div className={styles.meaningsContainer}>
               {result.meaning.map((group, index) => (
                 <div key={index} className={styles.meaningGroup}>
-                  <div className={styles.partOfSpeechHeader}>
+                  <div className={`${styles.partOfSpeechHeader} ${getPosClass(group.partOfSpeech)}`}>
                     {group.partOfSpeech}
                   </div>
                   <div className={styles.meaningsList}>
@@ -261,8 +275,6 @@ export default function Home() {
                 </details>
               </div>
             )}
-
-
 
             {/* Root Words / Cognates */}
             {result.type === 'word' && result.rootWords && result.rootWords.length > 0 && (
