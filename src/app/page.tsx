@@ -23,7 +23,7 @@ export default function Home() {
       // Small timeout to ensure DOM is ready and layout is stable
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      }, 500);
     }
   }, [result]);
 
@@ -212,8 +212,26 @@ export default function Home() {
               ))}
             </div>
 
+            {/* Morpheme Breakdown - Always Visible */}
+            {result.morphemes && result.morphemes.length > 0 && (
+              <div className={styles.sectionSeparator}>
+                <div className={styles.sectionHeaderUncollapsible}>
+                  <Sparkles className="w-4 h-4" />
+                  <h3 className={styles.sectionTitle}>Morpheme Breakdown</h3>
+                </div>
+                <div className={styles.morphemeList}>
+                  {result.morphemes.map((m, i) => (
+                    <div key={i} className={styles.morphemeRow}>
+                      <span className={styles.morphemePart}>{m.part}</span>
+                      <span className={styles.morphemeMeaning}>{m.meaning}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Etymology / Origin (Collapsible) */}
-            {(result.etymology || result.origin || (result.morphemes && result.morphemes.length > 0)) && (
+            {(result.etymology || result.origin) && (
               <div className={styles.sectionSeparator}>
                 <details className={styles.detailsSection} open={false}>
                   <summary className={styles.summaryHeader}>
@@ -227,17 +245,7 @@ export default function Home() {
                   </summary>
 
                   <div className={styles.detailsContent}>
-                    {/* Morpheme Breakdown */}
-                    {result.morphemes && result.morphemes.length > 0 && (
-                      <div className={styles.morphemeList}>
-                        {result.morphemes.map((m, i) => (
-                          <div key={i} className={styles.morphemeRow}>
-                            <span className={styles.morphemePart}>{m.part}</span>
-                            <span className={styles.morphemeMeaning}>{m.meaning}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+
 
                     {/* Text Explanation */}
                     <p className={styles.infoText}>

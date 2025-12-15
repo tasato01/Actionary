@@ -82,13 +82,14 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
       ],
       "pronunciation": "IPA",
       
-      // Etymology Breakdown
+      // Etymology Breakdown (MANDATORY)
       "etymology": "Full etymology explanation in Japanese",
       "morphemes": [
-        {"part": "morpheme text (e.g. com-)", "meaning": "meaning of this part in Japanese"}
+        {"part": "prefix/root/suffix", "meaning": "meaning in Japanese"}
       ],
       
-      // Cognates (Words sharing the same root/stem)
+      // Cognates / Root Words (MANDATORY - Provide at least 3 if possible)
+      // Words that share the same etymological root.
       "rootWords": [
         {"term": "cognate 1", "breakdown": "pre/*dict*", "meaning": "brief meaning in Japanese"}
       ],
