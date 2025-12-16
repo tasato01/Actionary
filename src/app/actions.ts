@@ -48,9 +48,9 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
 
   // List of models to try in order of preference
   const candidateModels = [
+    'gemini-2.0-flash',
     'gemini-2.5-flash-lite',
     'gemini-2.5-flash',
-    'gemini-2.0-flash',
   ];
 
   const prompt = `
