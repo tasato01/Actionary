@@ -246,28 +246,23 @@ export default function Home() {
             )}
 
             {/* Etymology / Origin (Collapsible) */}
+            {/* Etymology / Origin */}
             {(result.etymology || result.origin) && (
               <div className={styles.sectionSeparator}>
-                <details className={styles.detailsSection} open={false}>
-                  <summary className={styles.summaryHeader}>
-                    <div className="flex items-center gap-2">
-                      <HistoryIcon type={result.type} />
-                      <h3 className={styles.sectionTitle}>
-                        {result.type === 'word' ? 'Etymology' : 'Origin'}
-                      </h3>
-                    </div>
-                    <ChevronDown className={`w-4 h-4 ${styles.summaryIcon}`} />
-                  </summary>
-
-                  <div className={styles.detailsContent}>
-
-
-                    {/* Text Explanation */}
-                    <p className={styles.infoText}>
-                      {result.type === 'word' ? result.etymology : result.origin}
-                    </p>
+                <div className={styles.sectionHeaderUncollapsible}>
+                  <div className="flex items-center gap-2">
+                    <HistoryIcon type={result.type} />
+                    <h3 className={styles.sectionTitle}>
+                      {result.type === 'word' ? 'Etymology' : 'Origin'}
+                    </h3>
                   </div>
-                </details>
+                </div>
+
+                <div className={styles.textBlock}>
+                  <p className={styles.infoText}>
+                    {result.type === 'word' ? result.etymology : result.origin}
+                  </p>
+                </div>
               </div>
             )}
 

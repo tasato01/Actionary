@@ -420,59 +420,8 @@
   color: #f1f5f9;
 }
 
-/* Collapsible Details Styles */
-.detailsSection {
-  width: 100%;
-}
-
-.detailsSection>summary {
-  list-style: none;
-}
-
-.detailsSection>summary::-webkit-details-marker {
-  display: none;
-}
-
-.summaryHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  user-select: none;
-  padding: 0.5rem;
-  margin: -0.5rem;
-  border-radius: 0.5rem;
-  transition: background-color 0.2s;
-}
-
-.summaryHeader:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.summaryIcon {
-  transition: transform 0.3s ease;
-  color: #94a3b8;
-}
-
-.detailsSection[open] .summaryIcon {
-  transform: rotate(180deg);
-}
-
-.detailsContent {
-  margin-top: 1rem;
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.textBlock {
+  padding-left: 0.5rem;
 }
 
 /* Morphemes */
