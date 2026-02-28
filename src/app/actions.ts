@@ -116,7 +116,7 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
     }
   `;
 
-  let checkError: any = null;
+  let checkError: Error | null = null;
 
   for (const modelName of candidateModels) {
     // Retry logic for 503 Service Unavailable
@@ -132,8 +132,8 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
         const resultPromise = model.generateContent(prompt);
 
         // Race the request against the timeout
-        const result = await Promise.race([resultPromise, timeoutPromise]) as any;
-        const response = await result.response;
+        const result = await Promise.race([resultPromise, timeoutPromise]) as { response: unknown };
+        const response = await result.response as any;
         let text = response.text();
 
         // Cleanup json markdown if present (double check)
@@ -148,18 +148,19 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
         }
 
         return { success: true, data };
-      } catch (error: any) {
-        console.warn(`Model ${modelName} attempt ${attempt + 1} failed:`, error.message);
+      } catch (error: unknown) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        console.warn(`Model ${modelName} attempt ${attempt + 1} failed:`, err.message);
 
         // Capture the first error as it's likely the most relevant
-        if (!checkError && error.message.includes('503')) {
-          checkError = error; // Prioritize 503 for feedback if everything fails
+        if (!checkError && err.message.includes('503')) {
+          checkError = err; // Prioritize 503 for feedback if everything fails
         } else if (!checkError) {
-          checkError = error;
+          checkError = err;
         }
 
         // Only retry if it's a 503 error or request timeout
-        const isTransient = error.message.includes('503') || error.message.includes('timed out');
+        const isTransient = err.message.includes('503') || err.message.includes('timed out');
         if (!isTransient) break; // Don't retry other errors, move to next model or fail
 
         // Wait a small delay before retry
@@ -174,3 +175,12 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
     error: `Failed to retrieve dictionary data. Last error: ${checkError?.message || 'Unknown error'}`
   };
 }
+
+export async function searchMultipleDictionaries(queries: string[]): Promise<SearchResponse[]> {
+  // Execute searches concurrently, max 5 at a time to prevent API rate limits if necessary,
+  // but for simple comma separated it's probably fine to just Promise.all.
+  // Gemini might rate limit on free tier, but let's try concurrent first.
+  const promises = queries.map(q => searchDictionary(q));
+  return Promise.all(promises);
+}
+

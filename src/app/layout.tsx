@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Actionaly | Premium English-Japanese Dictionary",
-  description: "Explore the depths of words and idioms with Actionaly.",
+  title: "Actionary | Premium English-Japanese Dictionary",
+  description: "Explore the depths of words and idioms with Actionary.",
 };
 
 export default function RootLayout({
@@ -12,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className="antialiased bg-black min-h-screen text-white">
+    <html lang="ja" suppressHydrationWarning>
+      <body className="antialiased font-sans flex flex-col min-h-screen">
         {children}
       </body>
     </html>

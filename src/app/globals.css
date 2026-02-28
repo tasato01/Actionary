@@ -1,8 +1,31 @@
 :root {
-  --background: #050505;
-  --foreground: #ededed;
+  /* Default Light Mode Colors */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(0, 0, 0, 0.1);
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --muted-text: #64748b;
+  --morpheme-row-bg: rgba(0, 0, 0, 0.03);
+  --tag-bg: #e2e8f0;
+  --tag-hover: #cbd5e1;
 
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.dark {
+  /* Dark Mode Colors */
+  --background: #050505;
+  --foreground: #ededed;
+  
+  --card-bg: rgba(30, 41, 59, 0.8);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(30, 41, 59, 0.8);
+  --muted-text: #94a3b8;
+  --morpheme-row-bg: rgba(255, 255, 255, 0.03);
+  --tag-bg: #222222;
+  --tag-hover: #333333;
 }
 
 * {
@@ -19,6 +42,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -36,10 +60,18 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
 ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
