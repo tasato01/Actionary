@@ -89,7 +89,7 @@
 .searchIcon {
   width: 1.25rem;
   height: 1.25rem;
-  color: #94a3b8;
+  color: var(--muted-text);
   margin-left: 0.75rem;
 }
 
@@ -97,7 +97,7 @@
   flex: 1;
   background: transparent;
   border: none;
-  color: #f8fafc;
+  color: var(--foreground) !important;
   font-size: 1rem;
   padding: 0.75rem 1rem;
   outline: none;
@@ -105,7 +105,7 @@
 }
 
 .searchInput::placeholder {
-  color: #64748b;
+  color: var(--muted-text);
 }
 
 .clearButton {
@@ -116,16 +116,16 @@
   height: 1.5rem;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  background: var(--tag-bg);
+  color: var(--muted-text);
   cursor: pointer;
   margin-right: 0.5rem;
   transition: all 0.2s ease;
 }
 
 .clearButton:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: var(--tag-hover);
+  color: var(--foreground);
 }
 
 /* Card Header */
@@ -154,40 +154,35 @@
 
 /* POS Colors */
 .posNoun {
-  color: #fca5a5;
-  /* Red-300 */
-  background: rgba(127, 29, 29, 0.3);
-  border-color: rgba(248, 113, 113, 0.3);
+  color: var(--pos-noun-text);
+  background: var(--pos-noun-bg);
+  border-color: var(--pos-noun-border);
 }
 
 .posVerb {
-  color: #93c5fd;
-  /* Blue-300 */
-  background: rgba(30, 58, 138, 0.3);
-  border-color: rgba(96, 165, 250, 0.3);
+  color: var(--pos-verb-text);
+  background: var(--pos-verb-bg);
+  border-color: var(--pos-verb-border);
 }
 
 .posAdjective {
-  color: #fde047;
-  /* Yellow-300 */
-  background: rgba(113, 63, 18, 0.3);
-  border-color: rgba(250, 204, 21, 0.3);
+  color: var(--pos-adj-text);
+  background: var(--pos-adj-bg);
+  border-color: var(--pos-adj-border);
 }
 
 .posAdverb {
-  color: #86efac;
-  /* Green-300 */
-  background: rgba(20, 83, 45, 0.3);
-  border-color: rgba(74, 222, 128, 0.3);
+  color: var(--pos-adv-text);
+  background: var(--pos-adv-bg);
+  border-color: var(--pos-adv-border);
 }
 
 .posPreposition,
 .posConjunction,
 .posDefault {
-  color: #c4b5fd;
-  /* Violet-300 */
-  background: rgba(91, 33, 182, 0.3);
-  border-color: rgba(167, 139, 250, 0.3);
+  color: var(--pos-def-text);
+  background: var(--pos-def-bg);
+  border-color: var(--pos-def-border);
 }
 
 .searchButton:disabled {
@@ -224,7 +219,7 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 0;
-  color: #9ca3af;
+  color: var(--muted-text);
   gap: 1rem;
   animation: fadeIn 0.5s ease-out forwards;
 }

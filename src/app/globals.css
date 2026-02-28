@@ -2,7 +2,7 @@
   /* Default Light Mode Colors */
   --background: #f8fafc;
   --foreground: #0f172a;
-  
+
   --card-bg: rgba(255, 255, 255, 0.9);
   --card-border: rgba(0, 0, 0, 0.1);
   --input-bg: rgba(255, 255, 255, 0.9);
@@ -11,6 +11,27 @@
   --tag-bg: #e2e8f0;
   --tag-hover: #cbd5e1;
 
+  /* POS Colors (Light Mode) */
+  --pos-noun-text: #b91c1c;
+  --pos-noun-bg: rgba(254, 226, 226, 0.5);
+  --pos-noun-border: rgba(252, 165, 165, 0.5);
+
+  --pos-verb-text: #1d4ed8;
+  --pos-verb-bg: rgba(219, 234, 254, 0.5);
+  --pos-verb-border: rgba(147, 197, 253, 0.5);
+
+  --pos-adj-text: #a16207;
+  --pos-adj-bg: rgba(254, 249, 195, 0.5);
+  --pos-adj-border: rgba(253, 224, 71, 0.5);
+
+  --pos-adv-text: #15803d;
+  --pos-adv-bg: rgba(220, 252, 231, 0.5);
+  --pos-adv-border: rgba(134, 239, 172, 0.5);
+
+  --pos-def-text: #6d28d9;
+  --pos-def-bg: rgba(237, 233, 254, 0.5);
+  --pos-def-border: rgba(196, 181, 253, 0.5);
+
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -18,7 +39,7 @@
   /* Dark Mode Colors */
   --background: #050505;
   --foreground: #ededed;
-  
+
   --card-bg: rgba(30, 41, 59, 0.8);
   --card-border: rgba(255, 255, 255, 0.1);
   --input-bg: rgba(30, 41, 59, 0.8);
@@ -26,6 +47,27 @@
   --morpheme-row-bg: rgba(255, 255, 255, 0.03);
   --tag-bg: #222222;
   --tag-hover: #333333;
+
+  /* POS Colors (Dark Mode) */
+  --pos-noun-text: #fca5a5;
+  --pos-noun-bg: rgba(127, 29, 29, 0.3);
+  --pos-noun-border: rgba(248, 113, 113, 0.3);
+
+  --pos-verb-text: #93c5fd;
+  --pos-verb-bg: rgba(30, 58, 138, 0.3);
+  --pos-verb-border: rgba(96, 165, 250, 0.3);
+
+  --pos-adj-text: #fde047;
+  --pos-adj-bg: rgba(113, 63, 18, 0.3);
+  --pos-adj-border: rgba(250, 204, 21, 0.3);
+
+  --pos-adv-text: #86efac;
+  --pos-adv-bg: rgba(20, 83, 45, 0.3);
+  --pos-adv-border: rgba(74, 222, 128, 0.3);
+
+  --pos-def-text: #c4b5fd;
+  --pos-def-bg: rgba(91, 33, 182, 0.3);
+  --pos-def-border: rgba(167, 139, 250, 0.3);
 }
 
 * {
