@@ -65,6 +65,8 @@ export async function searchDictionary(query: string): Promise<SearchResponse> {
     
     IMPORTANT: When providing Japanese translations or meanings, DO NOT include Romaji or phonetic readings.
     
+    CRITICAL: Determine the EXACT part of speech based on the entered term. For example, if the user searches for a strict noun (e.g. "execution" or "apple"), ONLY provide the "noun" definitions. Do NOT hallucinate verb or adjective definitions for a word that is exclusively a noun. Keep the "partOfSpeech" field strictly to simple terms like: "noun", "verb", "adjective", "adverb", "preposition", "conjunction", "pronoun", or "phrase".
+    
     If it is a **word**:
     {
       "type": "word",

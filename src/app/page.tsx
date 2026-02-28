@@ -1,9 +1,15 @@
 'use client';
 
 import { useState, useTransition, useRef, useEffect } from 'react';
-import { Search, BookOpen, Clock, Globe, Info, Sparkles, Volume2, AlertCircle, X, Moon, Sun, HelpCircle } from 'lucide-react';
+import { Search, BookOpen, Clock, Globe, Info, Sparkles, Volume2, AlertCircle, X, Moon, Sun, HelpCircle, ChevronLeft, ChevronRight, History } from 'lucide-react';
 import { searchMultipleDictionaries, type DictionaryResult } from './actions';
 import styles from './page.module.css';
+
+export type HistoryItem = {
+  term: string;
+  meaning: string;
+  id: string;
+};
 
 // Allow longer timeout for AI generation (Vercel specific const)
 export const maxDuration = 60;
@@ -15,16 +21,26 @@ export default function Home() {
   const [isPending, startTransition] = useTransition();
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load theme on mount
+  // Load theme and history on mount
   useEffect(() => {
     const saved = localStorage.getItem('actionary-theme');
     if (saved === 'dark' || saved === 'light') {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(saved);
+    }
+    const savedHistory = localStorage.getItem('actionary-history');
+    if (savedHistory) {
+      try {
+        setHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.error("Failed to parse history", e);
+      }
     }
   }, []);
 
@@ -54,16 +70,11 @@ export default function Home() {
   // Auto-scroll to results when they appear
   useEffect(() => {
     if (results && resultsRef.current) {
-      // Use a slightly longer timeout to allow for full rendering and layout shift
       setTimeout(() => {
         if (resultsRef.current) {
-          const yOffset = -20; // Small offset if needed, or 0 to be exact top
-          const element = resultsRef.current;
-          const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
-
-          window.scrollTo({ top: y, behavior: 'smooth' });
+          resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      }, 600);
+      }, 100);
     }
   }, [results]);
 
@@ -98,7 +109,26 @@ export default function Home() {
           }
         });
 
-        if (newResults.length > 0) setResults(newResults);
+        if (newResults.length > 0) {
+          setResults(newResults);
+
+          // Add to History
+          setHistory(prev => {
+            const up = [...prev];
+            newResults.forEach(r => {
+              const firstMeaning = r.meaning[0]?.definitions[0] || '';
+              // Remove if already exists
+              const existingIdx = up.findIndex(h => h.term === r.term);
+              if (existingIdx !== -1) up.splice(existingIdx, 1);
+              // Prepend
+              up.unshift({ term: r.term, meaning: firstMeaning, id: crypto.randomUUID() });
+            });
+            // Keep latest 50
+            const finalHistory = up.slice(0, 50);
+            localStorage.setItem('actionary-history', JSON.stringify(finalHistory));
+            return finalHistory;
+          });
+        }
         else setResults(null);
 
         if (newErrors.length > 0) setErrors(newErrors);
@@ -157,16 +187,21 @@ export default function Home() {
 
   return (
     <main className={styles.container}>
+      {/* Top Right Controls */}
+      <div className="absolute top-4 right-4 z-50 flex gap-2">
+        <button onClick={() => setIsHistoryOpen(true)} className={styles.topButton} title="履歴 (History)">
+          <History className="w-5 h-5" />
+        </button>
+        <button onClick={() => setIsHelpOpen(true)} className={styles.topButton} title="使い方 (How to Use)">
+          <HelpCircle className="w-5 h-5" />
+        </button>
+        <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className={styles.topButton} title="Toggle Theme">
+          {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+        </button>
+      </div>
+
       {/* Header / Branding */}
       <div className={styles.header}>
-        <div className="flex justify-end gap-2 w-full px-4 mb-2 absolute top-4 right-4 z-50">
-          <button onClick={() => setIsHelpOpen(true)} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-slate-500 dark:text-slate-400" title="使い方 (How to Use)">
-            <HelpCircle className="w-6 h-6" />
-          </button>
-          <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-slate-500 dark:text-slate-400" title="Toggle Theme">
-            {theme === 'light' ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
-          </button>
-        </div>
         <h1 className={styles.title}>
           Actionary
         </h1>
@@ -181,7 +216,7 @@ export default function Home() {
             <Search className={styles.searchIcon} />
             <textarea
               ref={inputRef}
-              placeholder="Search words (use comma for multiple)..."
+              placeholder=""
               className={styles.searchInput}
               value={query}
               onChange={(e) => {
@@ -191,6 +226,7 @@ export default function Home() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
+                  e.currentTarget.blur();
                   executeSearch(query);
                 }
               }}
@@ -240,8 +276,10 @@ export default function Home() {
         <div ref={resultsRef} className={styles.resultsWrapper} style={{ marginTop: '1rem' }}>
           {/* Navigation Hint for Multiple Cards */}
           {results.length > 1 && (
-            <div className="text-center text-sm text-slate-500 dark:text-slate-400 mb-2 animate-pulse" style={{ animationDuration: '3s' }}>
-              Swipe left / right or use scrollbar to see all {results.length} words
+            <div className="flex justify-center items-center gap-4 text-slate-400 dark:text-slate-500 mb-2 mt-4">
+              <ChevronLeft className="w-5 h-5 animate-pulse" />
+              <span className="text-xs tracking-widest uppercase">SWIPE</span>
+              <ChevronRight className="w-5 h-5 animate-pulse" />
             </div>
           )}
           <div className={styles.cardsContainer}>
@@ -250,14 +288,8 @@ export default function Home() {
 
                 {/* Correction Notice */}
                 {result.correctedFrom && (
-                  <div className={styles.suggestion}>
-                    <div className="flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4" />
-                      <span>
-                        Showing results for <strong>{result.term}</strong>.
-                        <span className="opacity-75 text-sm ml-2">(Original search: {result.correctedFrom})</span>
-                      </span>
-                    </div>
+                  <div className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-2">
+                    (Original search: {result.correctedFrom})
                   </div>
                 )}
 
@@ -291,13 +323,10 @@ export default function Home() {
                 <div className={styles.meaningsContainer}>
                   {result.meaning.map((group, index) => (
                     <div key={index} className={styles.meaningGroup}>
-                      <div className={`${styles.partOfSpeechHeader} ${getPosClass(group.partOfSpeech)}`}>
-                        {group.partOfSpeech}
-                      </div>
                       <div className={styles.meaningsList}>
                         {group.definitions.map((def, i) => (
                           <div key={i} className={styles.meaningItem}>
-                            <div className={styles.bullet} />
+                            <div className={`${styles.bullet} ${getPosClass(group.partOfSpeech)}`} title={group.partOfSpeech} />
                             <p className={styles.meaningText}>{def}</p>
                           </div>
                         ))}
@@ -428,6 +457,44 @@ export default function Home() {
 
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* History Modal */}
+      {isHistoryOpen && (
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 w-full sm:w-[90%] sm:max-w-md h-[85vh] sm:h-auto sm:max-h-[80vh] rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-8 duration-300">
+            <div className="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-800">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <History className="w-5 h-5 text-blue-500" /> 履歴 (History)
+              </h2>
+              <button onClick={() => setIsHistoryOpen(false)} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto flex-1 overscroll-contain">
+              {history.length === 0 ? (
+                <div className="text-center text-slate-500 py-10">履歴がありません (No history yet)</div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {history.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setQuery(item.term);
+                        setIsHistoryOpen(false);
+                        executeSearch(item.term);
+                      }}
+                      className="text-left p-3 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all"
+                    >
+                      <div className="font-bold text-[var(--foreground)] text-lg">{item.term}</div>
+                      <div className="text-sm text-[var(--muted-text)] line-clamp-1">{item.meaning}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
