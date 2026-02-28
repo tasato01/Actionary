@@ -262,7 +262,7 @@ export default function Home() {
                 )}
 
                 <div className={styles.bgDecoration}>
-                  <Sparkles className="w-24 h-24 text-white" />
+                  <Sparkles className="w-24 h-24 text-indigo-500 dark:text-indigo-300" />
                 </div>
 
                 <div className={styles.cardHeader}>
