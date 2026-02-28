@@ -8,632 +8,634 @@
   padding: 3rem 1rem;
   gap: 1.5rem;
   width: 100%;
+  gap: 1.5rem;
+  width: 100%;
+}
 
-  .header {
-    text-align: center;
-    margin-bottom: 1.25rem;
-    animation: fadeIn 0.5s ease-out forwards;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  animation: fadeIn 0.5s ease-out forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  justify-content: center;
+}
+
+.topButton {
+  padding: 0.5rem;
+  border-radius: 50%;
+  color: var(--muted-text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  background: linear-gradient(to right, #60a5fa, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.25rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Search Form */
+.searchForm {
+  width: 100%;
+  max-width: 42rem;
+  position: relative;
+  z-index: 10;
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: 0.1s;
+}
+
+.searchGroup {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+.glowEffect {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #2563eb, #7c3aed);
+  border-radius: 9999px;
+  filter: blur(8px);
+  opacity: 0.25;
+  transition: opacity 0.5s ease;
+}
+
+.searchGroup:hover .glowEffect {
+  opacity: 0.5;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.inputWrapper:focus-within {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+  transform: translateY(-1px);
+  background: var(--input-bg);
+}
+
+.searchIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--muted-text);
+  margin-left: 0.75rem;
+}
+
+.searchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--foreground) !important;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  min-width: 0;
+}
+
+.searchInput::placeholder {
+  color: var(--muted-text);
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: none;
+  background: var(--tag-bg);
+  color: var(--muted-text);
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+  background: var(--tag-hover);
+  color: var(--foreground);
+}
+
+/* Card Header */
+.cardHeader {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ... (skip unchanged) ... */
+
+.partOfSpeechHeader {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  align-self: flex-start;
+  margin-bottom: 0.25rem;
+  border: 1px solid transparent;
+  /* Prepare for colored borders */
+}
+
+/* POS Colors (now applied to bullets) */
+.posNoun {
+  background-color: var(--pos-noun-text) !important;
+}
+
+.posVerb {
+  background-color: var(--pos-verb-text) !important;
+}
+
+.posAdjective {
+  background-color: var(--pos-adj-text) !important;
+}
+
+.posAdverb {
+  background-color: var(--pos-adv-text) !important;
+}
+
+.posPreposition,
+.posConjunction,
+.posDefault {
+  background-color: var(--pos-def-text) !important;
+}
+
+.searchButton:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Suggestion / Correction */
+.suggestion {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: #fde047;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Error Message */
+.errorMessage {
+  color: #fca5a5;
+  background-color: rgba(127, 29, 29, 0.2);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(127, 29, 29, 0.5);
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Loading State */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  color: var(--muted-text);
+  gap: 1rem;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Results Display */
+.resultsWrapper {
+  width: 100%;
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Cards Configuration */
+.cardsContainer {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  /* Space for scrollbar */
+}
+
+/* Hide scrollbar visually but keep functionality */
+.cardsContainer::-webkit-scrollbar {
+  height: 6px;
+}
+
+.cardsContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cardsContainer::-webkit-scrollbar-thumb {
+  background: var(--tag-bg);
+  border-radius: 4px;
+}
+
+.cardsContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-text);
+}
+
+.card {
+  position: relative;
+  min-width: min(100%, 600px);
+  max-width: 600px;
+  margin: 0 auto;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 100%;
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+}
+
+.bgDecoration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.cardHeader {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ... (skip unchanged) ... */
+
+.partOfSpeechHeader {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  align-self: flex-start;
+  margin-bottom: 0.25rem;
+}
+
+.term {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.025em;
+}
+
+.pronunciation {
+  font-size: 0.9rem;
+  color: var(--muted-text);
+  font-family: monospace;
+  background-color: var(--morpheme-row-bg);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--card-border);
+}
+
+.audioButton {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--muted-text);
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.audioButton:hover {
+  background-color: var(--tag-bg);
+  color: var(--foreground);
+  border-color: var(--muted-text);
+}
+
+.typeBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* Sections */
+.meaningsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.meaningGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.meaningsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.meaningItem {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.bullet {
+  margin-top: 0.4rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: var(--foreground);
+  flex-shrink: 0;
+}
+
+.meaningText {
+  font-size: 0.95rem;
+  color: var(--foreground);
+  line-height: 1.5;
+}
+
+/* Sections Common Styles */
+.sectionSeparator {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--card-border);
+}
+
+.sectionHeader,
+.sectionHeaderUncollapsible {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.sectionHeaderUncollapsible {
+  pointer-events: none;
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  color: var(--foreground);
+}
+
+.textBlock {
+  padding-left: 0.5rem;
+}
+
+/* History List specific */
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  max-height: 70vh;
+  padding-bottom: 2rem;
+}
+
+/* Morphemes */
+.morphemeList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.morphemeRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  background: var(--morpheme-row-bg);
+  border-radius: 8px;
+}
+
+.morphemePart {
+  font-family: monospace;
+  font-size: 0.95rem;
+  color: #8b5cf6;
+  min-width: 60px;
+}
+
+.dark .morphemePart {
+  color: #c4b5fd;
+}
+
+.morphemeMeaning {
+  color: var(--muted-text);
+  font-size: 0.95rem;
+}
+
+.infoText {
+  color: var(--muted-text);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* Examples */
+.exampleGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.exampleItem {
+  background: var(--morpheme-row-bg);
+  border-left: 3px solid #8b5cf6;
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
+}
+
+.exampleText {
+  font-style: italic;
+  color: var(--muted-text);
+  font-size: 0.95rem;
+}
+
+/* Related Words */
+.rootWordsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rootWordRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--morpheme-row-bg);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  gap: 1rem;
+}
+
+.rootWordRow:hover {
+  background: var(--tag-bg);
+  transform: translateX(4px);
+}
+
+.rootWordTerm {
+  font-weight: 700;
+  color: var(--foreground);
+  font-size: 1rem;
+}
+
+.rootWordBreakdown {
+  font-family: monospace;
+  font-style: italic;
+  color: var(--muted-text);
+  font-size: 0.9rem;
+}
+
+.highlightRoot {
+  font-weight: 800;
+  color: #a78bfa;
+  font-style: normal;
+}
+
+.rootWordMeaning {
+  font-size: 0.9rem;
+  color: var(--muted-text);
+}
+
+/* Fallback tags styling */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--tag-bg);
+  color: var(--muted-text);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  cursor: default;
+  transition: background-color 0.2s;
+}
+
+.tag:hover {
+  background-color: var(--tag-hover);
+}
+
+.disclaimer {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--muted-text);
+  text-align: center;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
 
-  .buttonGroup {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    justify-content: center;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
   }
 
-  .topButton {
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: var(--muted-text);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .topButton:hover {
-    background-color: var(--tag-bg);
-    color: var(--foreground);
-  }
-
-  .historyItem:hover {
-    border-color: #3b82f6;
-    /* Tailwind blue-500 */
-    background-color: var(--tag-bg);
-  }
-
-  .title {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -0.05em;
-    background: linear-gradient(to right, #60a5fa, #8b5cf6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 0.25rem;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-  }
-
-  .subtitle {
-    color: #9ca3af;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  /* Search Form */
-  .searchForm {
-    width: 100%;
-    max-width: 42rem;
-    position: relative;
-    z-index: 10;
-    animation: fadeIn 0.5s ease-out forwards;
-    animation-delay: 0.1s;
-  }
-
-  .searchGroup {
-    width: 100%;
-    max-width: 600px;
-    position: relative;
-  }
-
-  .glowEffect {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, #2563eb, #7c3aed);
-    border-radius: 9999px;
-    filter: blur(8px);
-    opacity: 0.25;
-    transition: opacity 0.5s ease;
-  }
-
-  .searchGroup:hover .glowEffect {
+  50% {
     opacity: 0.5;
   }
-
-  .inputWrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background: var(--input-bg);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 0.5rem;
-    transition: all 0.3s ease;
-  }
-
-  .inputWrapper:focus-within {
-    border-color: rgba(139, 92, 246, 0.5);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
-    transform: translateY(-1px);
-    background: var(--input-bg);
-  }
-
-  .searchIcon {
-    width: 1.25rem;
-    height: 1.25rem;
-    color: var(--muted-text);
-    margin-left: 0.75rem;
-  }
-
-  .searchInput {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--foreground) !important;
-    font-size: 1rem;
-    padding: 0.75rem 1rem;
-    outline: none;
-    min-width: 0;
-  }
-
-  .searchInput::placeholder {
-    color: var(--muted-text);
-  }
-
-  .clearButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    border: none;
-    background: var(--tag-bg);
-    color: var(--muted-text);
-    cursor: pointer;
-    margin-right: 0.5rem;
-    transition: all 0.2s ease;
-  }
-
-  .clearButton:hover {
-    background: var(--tag-hover);
-    color: var(--foreground);
-  }
-
-  /* Card Header */
-  .cardHeader {
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  /* ... (skip unchanged) ... */
-
-  .partOfSpeechHeader {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.25rem 0.75rem;
-    border-radius: 99px;
-    align-self: flex-start;
-    margin-bottom: 0.25rem;
-    border: 1px solid transparent;
-    /* Prepare for colored borders */
-  }
-
-  /* POS Colors (now applied to bullets) */
-  .posNoun {
-    background-color: var(--pos-noun-text) !important;
-  }
-
-  .posVerb {
-    background-color: var(--pos-verb-text) !important;
-  }
-
-  .posAdjective {
-    background-color: var(--pos-adj-text) !important;
-  }
-
-  .posAdverb {
-    background-color: var(--pos-adv-text) !important;
-  }
-
-  .posPreposition,
-  .posConjunction,
-  .posDefault {
-    background-color: var(--pos-def-text) !important;
-  }
-
-  .searchButton:disabled {
-    opacity: 0.7;
-    cursor: wait;
-  }
-
-  /* Suggestion / Correction */
-  .suggestion {
-    background-color: rgba(234, 179, 8, 0.1);
-    color: #fde047;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(234, 179, 8, 0.3);
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    animation: fadeIn 0.5s ease-out forwards;
-  }
-
-  /* Error Message */
-  .errorMessage {
-    color: #fca5a5;
-    background-color: rgba(127, 29, 29, 0.2);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(127, 29, 29, 0.5);
-    animation: fadeIn 0.5s ease-out forwards;
-  }
-
-  /* Loading State */
-  .loadingContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 0;
-    color: var(--muted-text);
-    gap: 1rem;
-    animation: fadeIn 0.5s ease-out forwards;
-  }
-
-  .spinner {
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    border-top-color: #3b82f6;
-    animation: spin 1s linear infinite;
-  }
-
-  .loadingText {
-    font-size: 0.875rem;
-    letter-spacing: 0.05em;
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  /* Results Display */
-  .resultsWrapper {
-    width: 100%;
-    animation: fadeIn 0.5s ease-out forwards;
-    animation-delay: 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* Cards Configuration */
-  .cardsContainer {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    /* Space for scrollbar */
-  }
-
-  /* Hide scrollbar visually but keep functionality */
-  .cardsContainer::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .cardsContainer::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .cardsContainer::-webkit-scrollbar-thumb {
-    background: var(--tag-bg);
-    border-radius: 4px;
-  }
-
-  .cardsContainer::-webkit-scrollbar-thumb:hover {
-    background: var(--muted-text);
-  }
-
-  .card {
-    position: relative;
-    min-width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    flex: 0 0 100%;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 1rem;
-    padding: 1.25rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    min-width: 100%;
-    flex: 0 0 100%;
-    scroll-snap-align: center;
-  }
-
-  .bgDecoration {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 1rem;
-    opacity: 0.1;
-    pointer-events: none;
-  }
-
-  .cardHeader {
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  /* ... (skip unchanged) ... */
-
-  .partOfSpeechHeader {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.25rem 0.75rem;
-    border-radius: 99px;
-    align-self: flex-start;
-    margin-bottom: 0.25rem;
-  }
-
-  .term {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--foreground);
-    letter-spacing: -0.025em;
-  }
-
-  .pronunciation {
-    font-size: 0.9rem;
-    color: var(--muted-text);
-    font-family: monospace;
-    background-color: var(--morpheme-row-bg);
-    padding: 0.2rem 0.5rem;
-    border-radius: 0.375rem;
-    border: 1px solid var(--card-border);
-  }
-
-  .audioButton {
-    background: transparent;
-    border: 1px solid var(--card-border);
-    color: var(--muted-text);
-    padding: 0.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-
-  .audioButton:hover {
-    background-color: var(--tag-bg);
-    color: var(--foreground);
-    border-color: var(--muted-text);
-  }
-
-  .typeBadge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #3b82f6;
-    border: 1px solid #3b82f6;
-    padding: 0.125rem 0.5rem;
-    border-radius: 0.25rem;
-  }
-
-  /* Sections */
-  .meaningsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
-  }
-
-  .meaningGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .meaningsList {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .meaningItem {
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-  }
-
-  .bullet {
-    margin-top: 0.4rem;
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 50%;
-    background-color: var(--foreground);
-    flex-shrink: 0;
-  }
-
-  .meaningText {
-    font-size: 0.95rem;
-    color: var(--foreground);
-    line-height: 1.5;
-  }
-
-  /* Sections Common Styles */
-  .sectionSeparator {
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--card-border);
-  }
-
-  .sectionHeader,
-  .sectionHeaderUncollapsible {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    color: var(--foreground);
-  }
-
-  .sectionHeaderUncollapsible {
-    pointer-events: none;
-  }
-
-  .sectionTitle {
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: 0.025em;
-    color: var(--foreground);
-  }
-
-  .textBlock {
-    padding-left: 0.5rem;
-  }
-
-  /* Morphemes */
-  .morphemeList {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .morphemeRow {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.5rem;
-    background: var(--morpheme-row-bg);
-    border-radius: 8px;
-  }
-
-  .morphemePart {
-    font-family: monospace;
-    font-size: 0.95rem;
-    color: #8b5cf6;
-    min-width: 60px;
-  }
-
-  .dark .morphemePart {
-    color: #c4b5fd;
-  }
-
-  .morphemeMeaning {
-    color: var(--muted-text);
-    font-size: 0.95rem;
-  }
-
-  .infoText {
-    color: var(--muted-text);
-    line-height: 1.7;
-    font-size: 0.95rem;
-  }
-
-  /* Examples */
-  .exampleGrid {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .exampleItem {
-    background: var(--morpheme-row-bg);
-    border-left: 3px solid #8b5cf6;
-    padding: 1rem;
-    border-radius: 0 8px 8px 0;
-  }
-
-  .exampleText {
-    font-style: italic;
-    color: var(--muted-text);
-    font-size: 0.95rem;
-  }
-
-  /* Related Words */
-  .rootWordsList {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .rootWordRow {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1.5fr;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background: var(--morpheme-row-bg);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    gap: 1rem;
-  }
-
-  .rootWordRow:hover {
-    background: var(--tag-bg);
-    transform: translateX(4px);
-  }
-
-  .rootWordTerm {
-    font-weight: 700;
-    color: var(--foreground);
-    font-size: 1rem;
-  }
-
-  .rootWordBreakdown {
-    font-family: monospace;
-    font-style: italic;
-    color: var(--muted-text);
-    font-size: 0.9rem;
-  }
-
-  .highlightRoot {
-    font-weight: 800;
-    color: #a78bfa;
-    font-style: normal;
-  }
-
-  .rootWordMeaning {
-    font-size: 0.9rem;
-    color: var(--muted-text);
-  }
-
-  /* Fallback tags styling */
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    padding: 0.25rem 0.75rem;
-    background-color: var(--tag-bg);
-    color: var(--muted-text);
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    cursor: default;
-    transition: background-color 0.2s;
-  }
-
-  .tag:hover {
-    background-color: var(--tag-hover);
-  }
-
-  .disclaimer {
-    margin-top: 1.5rem;
-    font-size: 0.75rem;
-    color: var(--muted-text);
-    text-align: center;
-    font-style: italic;
-    opacity: 0.8;
-  }
-
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes pulse {
-
-    0%,
-    100% {
-      opacity: 1;
-    }
-
-    50% {
-      opacity: 0.5;
-    }
-  }
+}

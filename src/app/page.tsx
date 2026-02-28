@@ -478,19 +478,26 @@ export default function Home() {
             {history.length === 0 ? (
               <div className="text-center text-[var(--muted-text)] py-10">履歴がありません (No history yet)</div>
             ) : (
-              <div className="flex flex-col gap-3">
+              <div className={styles.rootWordsList}>
                 {history.map((item) => (
-                  <button
+                  <div
                     key={item.id}
                     onClick={() => {
                       setQuery(item.term);
                       executeSearch(item.term);
                     }}
-                    className={styles.historyItem}
+                    role="button"
+                    tabIndex={0}
+                    className={styles.rootWordRow}
+                    title={`Search for "${item.term}"`}
                   >
-                    <div className="font-bold text-[var(--foreground)] text-lg">{item.term}</div>
-                    <div className="text-sm text-[var(--muted-text)] line-clamp-1 text-left">{item.meaning}</div>
-                  </button>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-blue-500" />
+                      <span className={styles.rootWordTerm}>{item.term}</span>
+                    </div>
+                    <span className="text-[var(--muted-text)] opacity-40 hidden sm:inline">|</span>
+                    <span className={styles.rootWordMeaning}>{item.meaning}</span>
+                  </div>
                 ))}
               </div>
             )}
